@@ -1,8 +1,9 @@
 package com.cart.shopping.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
+import java.util.ArrayList;
 
 import org.springframework.stereotype.Component;
 
@@ -10,55 +11,41 @@ import com.cart.shopping.model.Product;
 
 @Component
 public class ProductService {
-    List<Product> products = new ArrayList<>(Arrays.asList(
-        new Product(1, "Bottle", 300),
-        new Product(2, "Book", 50),
-        new Product(3, "Pen", 10)
-    ));
+    Map<Integer, Product> products = new HashMap<>();
+    
+    public ProductService() {
+        products.put(1, new Product(1, "Bottle", 300));
+        products.put(2, new Product(2, "Book", 50));
+        products.put(3, new Product(3, "Pen", 10));
+    }
     
     // Get all the Products
     public List<Product> getProducts(){
-        return products;
+        return new ArrayList<>(products.values());
     }
 
     // Get Product by Id
     public Product getProductById(int id){
-        for(Product product : products){
-            if (product.getId() == id){
-                return product;
-            }
-        }
-        return null;
+        return products.get(id);
     }
 
     // Add new Product
     public void addProduct(Product product){
-        products.add(product);
+        products.put(product.getId(), product);
     }
 
     // Update Product details
     public void updateProduct(Product product){
         int id = product.getId();
-        String name = product.getName();
-        int price = product.getPrice();
-
-        for(Product p : products){
-            if (p.getId() == id){
-                p.setName(name);
-                p.setPrice(price);
-            }
+        if (products.containsKey(id)) {
+            products.put(id, product);
         }
     }
 
+    // Delete the product
     public void deleteProduct(Product product){
         int id = product.getId();
-        
-        for(Product p : products){
-            if (p.getId() == id){
-                products.remove(p);
-                break;
-            }
-        }
+        products.remove(id);
     }
     
 }
